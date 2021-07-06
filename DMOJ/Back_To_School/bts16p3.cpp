@@ -13,7 +13,7 @@ int main() {
 	cin >> N;
 	while (N--) {
 		cin >> S;
-		if (prev[0] == S[0]) ans += ++csc;
+		if (prev[0] == S[0]) ans = (ans + ++csc) % 1000000007;
 		else csc = 1, ++ans;
 		prev = S;
 	}

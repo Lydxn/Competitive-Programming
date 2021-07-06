@@ -1,5 +1,3 @@
-// WIP
-
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 
@@ -29,27 +27,30 @@ int main() {
 	cin.tie(0);
 
 	int N; char ch;
-	cin >> N;
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
-			cin >> grid[i][j];
-	cin >> ch;
-	
-	int ans = 0;
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			for (int r = 0; r < N; r++) {
-				for (int c = 0; c < N; c++) {
-					if (i + r >= N || j + c >= N) continue;
-					if (i + c >= N || j - r < 0) continue;
-					if (i + r + c >= N || j + c - r < 0) continue;
-					if ((grid[i][j] == ch) + (grid[i + r][j + c] == ch) + (grid[i + c][j - r] == ch) + (grid[i + r + c][j + c - r] == ch) < 3) continue;
-					if (grid[i][j] != '*' && grid[i + r][j + c] != '*' && grid[i + c][j - r] != '*' && grid[i + r + c][j + c - r] != '*') continue;
-					ans = max(ans, r * r + c * c);
+	while (true) {
+		cin >> N;
+		if (N == -1) break;
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				cin >> grid[i][j];
+		cin >> ch;
+
+		int ans = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				for (int r = 0; r < N; r++) {
+					for (int c = 0; c < N; c++) {
+						if (i + r >= N || j + c >= N) continue;
+						if (i + c >= N || j - r < 0) continue;
+						if (i + r + c >= N || j + c - r < 0) continue;
+						if ((grid[i][j] == ch) + (grid[i + r][j + c] == ch) + (grid[i + c][j - r] == ch) + (grid[i + r + c][j + c - r] == ch) < 3) continue;
+						if (grid[i][j] != '*' && grid[i + r][j + c] != '*' && grid[i + c][j - r] != '*' && grid[i + r + c][j + c - r] != '*') continue;
+						ans = max(ans, r * r + c * c);
+					}
 				}
 			}
 		}
+		cout << ans << '\n';
 	}
-	cout << ans << '\n';
 	return 0;
 }
