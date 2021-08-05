@@ -1,0 +1,4 @@
+??=define P(...) puts(??=__VA_ARGS__)
+int main() ??<
+	P(Hello, World!);
+??>

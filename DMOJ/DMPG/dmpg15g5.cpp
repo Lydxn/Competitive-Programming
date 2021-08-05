@@ -20,19 +20,30 @@ const int MOD = 1e9 + 7;
 template <class T, class C = less<T>>
 using ordered_set = tree<T, null_type, C, rb_tree_tag, tree_order_statistics_node_update>;
 
-unordered_map<string, vector<int>> mp;
-string t[100000];
+priority_queue<int> V[2001];
+ll dp[2001];
 
 int main() {
 	cin.sync_with_stdio(0);
 	cin.tie(0);
 
-	int T, N; string s;
-	cin >> T;
-	for (int i = 0; i < T; i++) cin >> t[i];
-	cin >> N;
-	for (int i = 1; i <= N; i++) cin >> s, mp[s].push_back(i);
-	for (int i = 0; i < T; i++)
-		for (auto j : mp[t[i]]) cout << j << '\n';
+	int N, R, E, C1, V1, CA, CB, CM, VA, VB, VM; ll free = 0;
+	cin >> N >> R;
+	while (N--) {
+		cin >> E >> C1 >> V1 >> CA >> CB >> CM >> VA >> VB >> VM;
+		while (E--) {
+			if (C1 == 0) free += V1;
+			else if (C1 <= R) V[C1].push(V1);
+			C1 = (1LL * C1 * CA + CB) % CM, V1 = (1LL * V1 * VA + VB) % VM;
+		}
+	}
+	for (int i = 1; i <= R; i++) {
+		for (int c = R / i; !V[i].empty() && c; c--) {
+			int v = V[i].top(); V[i].pop();
+			for (int j = R; j >= i; j--)
+				dp[j] = max(dp[j], dp[j - i] + v);
+		}
+	}
+	cout << dp[R] + free << '\n';
 	return 0;
 }

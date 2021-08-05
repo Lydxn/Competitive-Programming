@@ -20,19 +20,30 @@ const int MOD = 1e9 + 7;
 template <class T, class C = less<T>>
 using ordered_set = tree<T, null_type, C, rb_tree_tag, tree_order_statistics_node_update>;
 
-unordered_map<string, vector<int>> mp;
-string t[100000];
+deque<pii> dq;
+int V[1000000];
 
 int main() {
 	cin.sync_with_stdio(0);
 	cin.tie(0);
 
-	int T, N; string s;
-	cin >> T;
-	for (int i = 0; i < T; i++) cin >> t[i];
-	cin >> N;
-	for (int i = 1; i <= N; i++) cin >> s, mp[s].push_back(i);
-	for (int i = 0; i < T; i++)
-		for (auto j : mp[t[i]]) cout << j << '\n';
+	int N, K, ans = INF;
+	cin >> N >> K;
+	for (int i = 0; i < N; i++) cin >> V[i];
+	sort(V, V + N);
+	for (int i = 0; i < N - K - 1; i++) {
+		int d = V[i + 1] - V[i];
+		while (!dq.empty() && d <= dq.back().first) dq.pop_back();
+		dq.emplace_back(d, i);
+	}
+	for (int i = N - K - 1; i < N; i++) {
+		int l = i - N + K + 1, m = dq.front().first;
+		ans = min(ans, V[i] - V[l] + m);
+		if (!dq.empty() && dq.front().second <= l) dq.pop_front();
+		int d = V[i + 1] - V[i];
+		while (!dq.empty() && d <= dq.back().first) dq.pop_back();
+		dq.emplace_back(d, i);
+	}
+	cout << ans << '\n';
 	return 0;
 }

@@ -20,19 +20,24 @@ const int MOD = 1e9 + 7;
 template <class T, class C = less<T>>
 using ordered_set = tree<T, null_type, C, rb_tree_tag, tree_order_statistics_node_update>;
 
-unordered_map<string, vector<int>> mp;
-string t[100000];
+struct wtf {
+	double v; int i;
+	bool operator> (const wtf &w) const { return v > w.v; }
+} w[10000];
+bool vis[101];
 
 int main() {
 	cin.sync_with_stdio(0);
 	cin.tie(0);
 
-	int T, N; string s;
-	cin >> T;
-	for (int i = 0; i < T; i++) cin >> t[i];
-	cin >> N;
-	for (int i = 1; i <= N; i++) cin >> s, mp[s].push_back(i);
-	for (int i = 0; i < T; i++)
-		for (auto j : mp[t[i]]) cout << j << '\n';
+	int N, M, K; double ans = 0;
+	cin >> N >> M >> K;
+	for (int i = 0; i < M * N; i++)
+		cin >> w[i].i >> w[i].v;
+	sort(w, w + M * N, greater<wtf>());
+	for (int i = 0; i < M * N && K; i++)
+		if (!vis[w[i].i])
+			ans += w[i].v, vis[w[i].i] = true, --K;
+	cout << fixed << setprecision(1) << ans << '\n';
 	return 0;
 }
