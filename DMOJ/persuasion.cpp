@@ -20,33 +20,24 @@ const int MOD = 1e9 + 7;
 template <class T, class C = less<T>>
 using ordered_set = tree<T, null_type, C, rb_tree_tag, tree_order_statistics_node_update>;
 
-vector<int> adj[200001];
-set<int> ss[200001];
-int ans[200001];
-
-void dfs(int cur, int prev) {
-	for (int i : adj[cur]) {
-		if (i == prev) continue;
-		dfs(i, cur);
-		if (ss[i].size() > ss[cur].size()) swap(ss[cur], ss[i]);
-		ss[cur].insert(ss[i].begin(), ss[i].end()), ss[i].clear();
-	}
-	ans[cur] = ss[cur].size();
-}
+int a[19], m[19], dp[1 << 19];
 
 int main() {
 	cin.sync_with_stdio(0);
 	cin.tie(0);
 
-	int n, a, b, c;
-	cin >> n;
-	for (int i = 1; i <= n; i++) cin >> c, ss[i].insert(c);
-	for (int i = 0; i < n - 1; i++) {
-		cin >> a >> b;
-		adj[a].push_back(b), adj[b].push_back(a);
+	int N;
+	cin >> N;
+	for (int i = 0; i < N; i++) cin >> a[i];
+	for (int i = 0; i < N; i++) cin >> m[i];
+	for (int i = 1; i < 1 << N; i++) dp[i] = INT_MIN;
+	dp[0] = 0;
+	for (int i = 0; i < 1 << N; i++) {
+		int sz = __builtin_popcount(i);
+		for (int j = 0; j < N; j++)
+			if (!(i & (1 << j)))
+				dp[i | (1 << j)] = max(dp[i | (1 << j)], dp[i] + a[j] * m[(sz + j) % N]);
 	}
-	dfs(1, 0);
-	for (int i = 1; i <= n; i++) cout << ans[i] << ' ';
-	cout << '\n';
+	cout << dp[(1 << N) - 1] << '\n';
 	return 0;
 }

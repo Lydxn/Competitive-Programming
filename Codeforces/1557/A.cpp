@@ -20,33 +20,20 @@ const int MOD = 1e9 + 7;
 template <class T, class C = less<T>>
 using ordered_set = tree<T, null_type, C, rb_tree_tag, tree_order_statistics_node_update>;
 
-vector<int> adj[200001];
-set<int> ss[200001];
-int ans[200001];
-
-void dfs(int cur, int prev) {
-	for (int i : adj[cur]) {
-		if (i == prev) continue;
-		dfs(i, cur);
-		if (ss[i].size() > ss[cur].size()) swap(ss[cur], ss[i]);
-		ss[cur].insert(ss[i].begin(), ss[i].end()), ss[i].clear();
-	}
-	ans[cur] = ss[cur].size();
-}
-
 int main() {
 	cin.sync_with_stdio(0);
 	cin.tie(0);
 
-	int n, a, b, c;
-	cin >> n;
-	for (int i = 1; i <= n; i++) cin >> c, ss[i].insert(c);
-	for (int i = 0; i < n - 1; i++) {
-		cin >> a >> b;
-		adj[a].push_back(b), adj[b].push_back(a);
+	int t, n, a;
+	cin >> t;
+	while (t--) {
+		cin >> n;
+		int mx = -INF; ll s = 0;
+		for (int i = 0; i < n; i++) {
+			cin >> a;
+			mx = max(mx, a), s += a;
+		}
+		cout << fixed << setprecision(9) << mx + 1.0 * (s - mx) / (n - 1) << '\n';
 	}
-	dfs(1, 0);
-	for (int i = 1; i <= n; i++) cout << ans[i] << ' ';
-	cout << '\n';
 	return 0;
 }

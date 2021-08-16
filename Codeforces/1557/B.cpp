@@ -20,33 +20,21 @@ const int MOD = 1e9 + 7;
 template <class T, class C = less<T>>
 using ordered_set = tree<T, null_type, C, rb_tree_tag, tree_order_statistics_node_update>;
 
-vector<int> adj[200001];
-set<int> ss[200001];
-int ans[200001];
-
-void dfs(int cur, int prev) {
-	for (int i : adj[cur]) {
-		if (i == prev) continue;
-		dfs(i, cur);
-		if (ss[i].size() > ss[cur].size()) swap(ss[cur], ss[i]);
-		ss[cur].insert(ss[i].begin(), ss[i].end()), ss[i].clear();
-	}
-	ans[cur] = ss[cur].size();
-}
+int a[100000], ind[100000];
 
 int main() {
 	cin.sync_with_stdio(0);
 	cin.tie(0);
 
-	int n, a, b, c;
-	cin >> n;
-	for (int i = 1; i <= n; i++) cin >> c, ss[i].insert(c);
-	for (int i = 0; i < n - 1; i++) {
-		cin >> a >> b;
-		adj[a].push_back(b), adj[b].push_back(a);
+	int t, n, k;
+	cin >> t;
+	while (t--) {
+		cin >> n >> k;
+		for (int i = 0; i < n; i++) cin >> a[i], ind[i] = i;
+		sort(ind, ind + n, [&] (int x, int y) { return a[x] < a[y]; });
+		for (int i = 1; i < n; i++)
+			if (ind[i - 1] + 1 != ind[i]) --k;
+		cout << (k > 0 ? "Yes" : "No") << '\n';
 	}
-	dfs(1, 0);
-	for (int i = 1; i <= n; i++) cout << ans[i] << ' ';
-	cout << '\n';
 	return 0;
 }

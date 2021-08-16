@@ -20,33 +20,27 @@ const int MOD = 1e9 + 7;
 template <class T, class C = less<T>>
 using ordered_set = tree<T, null_type, C, rb_tree_tag, tree_order_statistics_node_update>;
 
-vector<int> adj[200001];
-set<int> ss[200001];
-int ans[200001];
-
-void dfs(int cur, int prev) {
-	for (int i : adj[cur]) {
-		if (i == prev) continue;
-		dfs(i, cur);
-		if (ss[i].size() > ss[cur].size()) swap(ss[cur], ss[i]);
-		ss[cur].insert(ss[i].begin(), ss[i].end()), ss[i].clear();
-	}
-	ans[cur] = ss[cur].size();
-}
+int x[501], y[501], r[501];
+bool vis[501];
+queue<int> q;
 
 int main() {
 	cin.sync_with_stdio(0);
 	cin.tie(0);
 
-	int n, a, b, c;
-	cin >> n;
-	for (int i = 1; i <= n; i++) cin >> c, ss[i].insert(c);
-	for (int i = 0; i < n - 1; i++) {
+	int B, Q, a, b;
+	cin >> B >> Q;
+	for (int i = 1; i <= B; i++) cin >> x[i] >> y[i] >> r[i];
+	while (Q--) {
 		cin >> a >> b;
-		adj[a].push_back(b), adj[b].push_back(a);
+		memset(vis, false, sizeof(vis)); q.push(a); vis[a] = true;
+		while (!q.empty()) {
+			int cv = q.front(); q.pop();
+			for (int i = 1; i <= B; i++)
+				if (!vis[i] && i != cv && (x[cv] - x[i]) * (x[cv] - x[i]) + (y[cv] - y[i]) * (y[cv] - y[i]) <= r[cv] * r[cv])
+					q.push(i), vis[i] = true;
+		}
+		cout << (vis[b] ? "YES" : "NO") << '\n';
 	}
-	dfs(1, 0);
-	for (int i = 1; i <= n; i++) cout << ans[i] << ' ';
-	cout << '\n';
 	return 0;
 }
